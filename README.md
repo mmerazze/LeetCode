@@ -1,5 +1,6 @@
 LeetCode problems for Week 2
-Individual problems
+
+Individual problems:
 1. Number of Unequal Triplets in an array
   - Arrays management
   - Algorithms
