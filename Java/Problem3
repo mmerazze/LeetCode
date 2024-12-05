@@ -1,0 +1,24 @@
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        HashMap<Character, Integer> visited = new HashMap<>();
+        int startOfSubstring = 0;
+        int largestSubstringLen = 0;
+
+        for (int idx = 0; idx < s.length(); idx++) {
+            char c = s.charAt(idx);
+            int j = visited.getOrDefault(c, -1);
+
+            if (j >= startOfSubstring) {
+                startOfSubstring = j + 1;
+            } else {
+                int newLargest = idx - startOfSubstring + 1;
+                if (newLargest > largestSubstringLen) {
+                    largestSubstringLen = newLargest;
+                }
+            }
+            visited.put(c, idx);
+        }
+
+        return largestSubstringLen;
+    }
+}
