@@ -1,0 +1,54 @@
+class Node:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None
+        self.prev = None
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = Node(0,0)
+        self.tail = Node(0,0)
+        self.head.next = self.tail
+        self.tail.prev = self.head
+    def remove(self, n):
+        preNode = n.prev
+        postNode = n.next
+        preNode.next = postNode
+        postNode.prev = preNode
+    def addToFront(self, n):
+        n.prev = self.head
+        n.next = self.head.next
+        self.head.next.prev = n
+        self.head.next = n
+    def moveToFront(self,n):
+        self.remove(n)
+        self.addToFront(n)
+
+class LRUCache(object):
+
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.cache = {}
+        self.use = DoublyLinkedList()
+
+    def get(self, key) -> int:
+        if key not in self.cache:
+            return -1
+        node = self.cache[key]
+        self.use.moveToFront(node)
+        return node.value
+
+    def put(self, key, value) -> None:
+        if key in self.cache:
+            node = self.cache[key]
+            node.value = value
+            self.use.moveToFront(node)
+        else:
+            if len(self.cache) >= self.capacity:
+                # Remove the least recently used item
+                lru_node = self.use.tail.prev
+                self.use.remove(lru_node)
+                del self.cache[lru_node.key]
+            newNode = Node(key, value)
+            self.cache[key] = newNode
+            self.use.addToFront(newNode)
