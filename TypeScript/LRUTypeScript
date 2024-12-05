@@ -1,0 +1,74 @@
+class Node {
+    key : number;
+    value: number;
+    next : Node | null;
+    prev : Node | null;
+    constructor(key : number, value : number){
+        this.key = key;
+        this.value = value;
+        this.next = null;
+        this.prev = null;
+    }
+}
+class DoublyLinkedList{
+    head : Node;
+    tail : Node;
+    constructor(){
+        this.head = new Node(0,0);
+        this.tail = new Node(0,0);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+    }
+    remove(n : Node): void{
+        const preNode = n.prev;
+        const postNode = n.next;
+        preNode.next = postNode;
+        postNode.prev = preNode; 
+    }
+    addToFront(n : Node): void{
+        n.prev = this.head;
+        n.next = this.head.next;
+        this.head.next.prev = n;
+        this.head.next = n;
+    }
+    moveToFront(n : Node): void{
+        this.remove(n);
+        this.addToFront(n);
+    }
+}
+class LRUCache {
+    private capacity : number;
+    private cache : Map<number,Node>;
+    private use : DoublyLinkedList;
+    constructor(capacity: number) {
+        this.capacity = capacity;
+        this.cache = new Map();
+        this.use = new DoublyLinkedList();
+    }
+
+    get(key: number): number {
+        if(this.cache.has(key)){
+            const n = this.cache.get(key)!;
+            this.use.moveToFront(n);
+            return n.value
+        }
+        return -1;
+    }
+
+    put(key: number, value: number): void {
+        if(this.cache.has(key)){
+            const n = this.cache.get(key)!;
+            n.value = value;
+            this.use.moveToFront(n);
+        }else{
+            if(this.cache.size >= this.capacity){
+                const nLRU = this.use.tail.prev;
+                this.use.remove(nLRU);
+                this.cache.delete(nLRU.key);
+            }
+            const newNode = new Node(key, value);
+            this.cache.set(key, newNode);
+            this.use.addToFront(newNode);
+        }
+    }
+}
