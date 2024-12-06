@@ -1,0 +1,24 @@
+class Solution {
+    lengthOfLongestSubstring(s: string): number {
+        const visited: { [key: string]: number } = {};
+        let startOfSubstring = 0;
+        let largestSubstringLen = 0;
+
+        for (let idx = 0; idx < s.length; idx++) {
+            const c = s[idx];
+            const j = visited[c] !== undefined ? visited[c] : -1;
+
+            if (j >= startOfSubstring) {
+                startOfSubstring = j + 1;
+            } else {
+                const newLargest = idx - startOfSubstring + 1;
+                if (newLargest > largestSubstringLen) {
+                    largestSubstringLen = newLargest;
+                }
+            }
+            visited[c] = idx;
+        }
+
+        return largestSubstringLen;
+    }
+}
